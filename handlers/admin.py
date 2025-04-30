@@ -8,7 +8,7 @@ from database import get_all_user, get_new_user,  get_phone_user
 
 admin = Router()
 
-LIST_ADMIN = [431589340]
+LIST_ADMIN = [431589340, 43961092]
 
 admin.message.filter((F.from_user.id.in_(LIST_ADMIN)))
 
@@ -24,8 +24,9 @@ async def send_alert(message: Message, contact = None):
         message_text += f"Имя: {contact.first_name}\n"
         message_text += f"Телефон: {contact.phone_number}\n"
         message_text += f"User ID: {contact.user_id}"
-        
-    await message.bot.send_message(chat_id = ADMIN_ID, 
+    
+    for admin in LIST_ADMIN:
+        await message.bot.send_message(chat_id = admin, 
                                    text=message_text)
 
 class msg_state(StatesGroup):
