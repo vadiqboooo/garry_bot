@@ -8,7 +8,7 @@ from database import get_all_user, get_new_user,  get_phone_user
 
 admin = Router()
 
-LIST_ADMIN = [431589340, 43961092]
+LIST_ADMIN = [431589340, 439610902]
 
 admin.message.filter((F.from_user.id.in_(LIST_ADMIN)))
 
