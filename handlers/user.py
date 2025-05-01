@@ -21,8 +21,7 @@ scheduler = AsyncIOScheduler()
 @user.message(Command("start"))
 async def cmd_start(message: Message):
     """Обработка /start"""
-    await add_admin(431589340)
-    print('админ добавлен')
+ 
     user = message.from_user
     
     # Добавляем пользователя в БД
