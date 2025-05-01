@@ -33,8 +33,6 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     
-    await add_admin(431589340)
-    print('Добавлен админ')
 
 async def add_admin(telegram_id: int):
     async with async_session() as session:

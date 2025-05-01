@@ -8,7 +8,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
-from database import add_user, update_user, get_user
+from database import add_user, update_user, get_user, add_admin
 
 from message_file import text
 from handlers.admin import send_alert
@@ -21,6 +21,8 @@ scheduler = AsyncIOScheduler()
 @user.message(Command("start"))
 async def cmd_start(message: Message):
     """Обработка /start"""
+    await add_admin(431589340)
+    print('админ добавлен')
     user = message.from_user
     
     # Добавляем пользователя в БД
