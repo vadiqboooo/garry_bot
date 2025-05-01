@@ -32,6 +32,8 @@ async def init_db():
     """Создание таблиц в БД"""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    
+    await add_admin(431589340)
 
 async def add_admin(telegram_id: int):
     async with async_session() as session:
