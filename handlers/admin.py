@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
-from database import get_all_user, get_new_user,  get_phone_user
+from database import *
 
 admin = Router()
 
@@ -97,3 +97,22 @@ async def send_message(message: Message, state: FSMContext):
         
     await message.answer(f"✅ Рассылка завершена! Получателей: {user_ids}")
     await state.clear()
+
+
+class DELETE_USER(StatesGroup):
+    telegram_id = State()
+
+
+@admin.message(Command('delete_user'))
+async def admin_send_new(message: Message, state: FSMContext):
+    await message.answer('Введите ID пользователя:')
+    await state.set_state(DELETE_USER.telegram_id)
+
+@admin.message(DELETE_USER.telegram_id)
+async def cmd_delete_user(message: Message, state: FSMContext):
+    id_user = message.text
+    if await delete_user(id_user):
+        await message.answer('Пользователь удален')
+    else:
+        await message.answer('Такого пользователя нет')
+    

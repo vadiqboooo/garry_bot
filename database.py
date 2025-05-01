@@ -54,6 +54,9 @@ async def delete_user(telegram_id: int):
         if user:
             session.delete(user)
             await session.commit()
+            return True
+        else:
+            return False
 
 
 
