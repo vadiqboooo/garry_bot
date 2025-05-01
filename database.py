@@ -52,7 +52,7 @@ async def delete_user(telegram_id: int):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
         if user:
-            session.delete(user)
+            await session.delete(user)
             await session.commit()
             return True
         else:
