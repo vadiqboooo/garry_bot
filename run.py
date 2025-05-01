@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from database import init_db
 
 from handlers.admin import admin
-from handlers.user import user
+from handlers.user import user, scheduler
 from config import TELEGRAM_TOKEN
 
 # Настройка логирования
@@ -23,6 +23,7 @@ async def main():
     await init_db()  # Создаем таблицы при старте
     dp.include_router(user)
     dp.include_router(admin)
+    scheduler.start()
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

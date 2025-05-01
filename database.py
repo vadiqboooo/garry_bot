@@ -19,11 +19,52 @@ class User(Base):
     username = Column(String(100), nullable=True)
     phone_number = Column(String(20), nullable=True)
 
+
+class Admin(Base):
+    __tablename__ = 'admins'
+
+    telegram_id = Column(BigInteger, unique=True, primary_key=True)
+    role = Column(Integer, nullable=True)
+
+
 # ====== Хэндлеры и функции ====== #
 async def init_db():
     """Создание таблиц в БД"""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+async def add_admin(telegram_id: int):
+    async with async_session() as session:
+        try:
+            new_admin = Admin(telegram_id = telegram_id)
+            session.add(new_admin)
+            await session.commit()
+            return True
+        except: 
+            return False
+
+async def delete_admin(telegram_id: int):
+    async with async_session() as session:
+        admin = await session.scalar(select(Admin).where(Admin.telegram_id == telegram_id))
+        if admin:
+            await session.delete(admin)
+            await session.commit()
+            return True
+        else:
+            return False
+        
+async def get_admin_ids():
+    """Получаем ID администраторов из базы данных"""
+    async with async_session() as session:
+        result = await session.execute(
+            select(Admin.telegram_id)
+        )
+        return [row[0] for row in result.all()]
+
+async def get_admin():
+    async with async_session() as session:
+        admins = await session.scalars(select(Admin))
+        return admins.all()
 
 async def add_user(telegram_id: int, username: Optional[str] = None, phone_number: Optional[str] = None):
     """Добавление пользователя в БД"""
