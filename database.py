@@ -47,6 +47,16 @@ async def update_user(telegram_id: int, phone_number: Optional[str] = None):
         await session.commit()
 
 
+async def delete_user(telegram_id: int):
+    """Добавление пользователю номер телефона"""
+    async with async_session() as session:
+        user = await session.scalar(select(User).where(User.telegram_id == telegram_id))
+        if user:
+            session.delete(user)
+            await session.commit()
+
+
+
 async def get_user(telegram_id: int) -> Optional[User]:
     """Получение пользователя из БД"""
     async with async_session() as session:
