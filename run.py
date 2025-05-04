@@ -5,7 +5,7 @@ from database import init_db
 
 from handlers.admin import admin
 from handlers.user import user, scheduler
-from config import TELEGRAM_TOKEN
+from config import TELEGRAM_TOKEN, TEST_TOKEN
 
 # Настройка логирования
 import logging

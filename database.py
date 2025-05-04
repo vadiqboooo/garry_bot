@@ -120,7 +120,7 @@ async def get_all_user() -> Optional[User]:
 async def get_new_user() -> Optional[User]:
     """Получение пользователя из БД"""
     async with async_session() as session:
-        result = await session.scalars(select(User).where(User.phone_number == ''))
+        result = await session.scalars(select(User).where(User.phone_number == None))
 
         return result.all() 
 

@@ -4,6 +4,8 @@ from aiogram.filters import Command, BaseFilter, CommandObject
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
+from aiogram.enums import ParseMode
+
 from database import *
 
 admin = Router()
@@ -92,7 +94,11 @@ async def admin_send_phone(message: Message, state: FSMContext):
 async def send_message(message: Message, state: FSMContext):
     data = await state.get_data()  # Получаем сохраненный тип рассылки
     mailing_type = data.get("mailing_type")
-    text_to_send = message.text
+    text_to_send = message.md_text
+
+    photo_file_id  = None
+    if message.photo:
+        photo_file_id = message.photo[-1].file_id
 
     if mailing_type == 'all':
         users = await get_all_user()
@@ -108,8 +114,15 @@ async def send_message(message: Message, state: FSMContext):
     user_ids = 0
     for user in users:
         try:
-            await message.bot.send_message(chat_id=user.telegram_id,
-                                       text = text_to_send)
+            if photo_file_id == None:
+                await message.bot.send_message(chat_id=user.telegram_id,
+                                        text = text_to_send,
+                                        parse_mode=ParseMode.MARKDOWN_V2)
+            else:
+                await message.bot.send_photo(chat_id=user.telegram_id,
+                                        photo=photo_file_id,
+                                        caption = text_to_send,
+                                        parse_mode=ParseMode.MARKDOWN_V2)
             user_ids += 1
         except:
             ...
